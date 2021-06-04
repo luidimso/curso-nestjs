@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, ParseIntPipe, Patch, Post } from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpCode, Param, ParseIntPipe, Patch, Post, ValidationPipe } from "@nestjs/common";
 import { CreateEventDTO } from "./create-event.dto";
 import { UpdateEventDTO } from "./update-event.dto";
 import { Event } from "./event.entity";

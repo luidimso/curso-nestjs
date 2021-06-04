@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post } from "@ne
 import { CreateEventDTO } from "./create-event.dto";
 import { UpdateEventDTO } from "./update-event.dto";
 import { Event } from "./event.entity";
-import { Repository } from "typeorm";
+import { Like, MoreThan, Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 
 @Controller('/events')
@@ -16,9 +16,26 @@ export class EventsController {
         return await this.repository.find();
     }
 
-    @Get(':id')
-    async findOne(@Param('id') id) {
-        return await this.repository.findOne(id);
+    // @Get(':id')
+    // async findOne(@Param('id') id) {
+    //     return await this.repository.findOne(id);
+    // }
+
+    @Get('/practice')
+    async practice() {
+        return await this.repository.find({
+            select: ['id', 'when'],
+            where: [{
+                id: MoreThan(3),
+                when: MoreThan(new Date('2021-02-12T13:00:00'))
+            },{
+                description: Like('%meet%')
+            }],
+            take: 2,
+            order: {
+                id: 'DESC'
+            }
+        });
     }
 
     @Post()

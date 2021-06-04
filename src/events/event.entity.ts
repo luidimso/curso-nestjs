@@ -8,5 +8,7 @@ export class Event {
     @Column() description: string;
     @Column() when: Date;
     @Column() address: string;
-    @OneToMany(() => Attendee, (attendee) => attendee.event) attendees: Attendee[];
+    @OneToMany(() => Attendee, (attendee) => attendee.event, {
+        cascade: true
+    }) attendees: Attendee[];
 }

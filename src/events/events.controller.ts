@@ -21,31 +21,38 @@ export class EventsController {
         return events;
     }
 
-    @Get(':id')
-    async findOne(@Param('id', ParseIntPipe) id:number) {
-        const event = await this.repository.findOne(id);
+    // @Get(':id')
+    // async findOne(@Param('id', ParseIntPipe) id:number) {
+    //     const event = await this.repository.findOne(id);
 
-        if(!event) {
-            throw new NotFoundException();
-        }
+    //     if(!event) {
+    //         throw new NotFoundException();
+    //     }
 
-        return event;
-    }
+    //     return event;
+    // }
 
-    @Get('/practice')
-    async practice() {
-        return await this.repository.find({
-            select: ['id', 'when'],
-            where: [{
-                id: MoreThan(3),
-                when: MoreThan(new Date('2021-02-12T13:00:00'))
-            },{
-                description: Like('%meet%')
-            }],
-            take: 2,
-            order: {
-                id: 'DESC'
-            }
+    // @Get('/practice')
+    // async practice() {
+    //     return await this.repository.find({
+    //         select: ['id', 'when'],
+    //         where: [{
+    //             id: MoreThan(3),
+    //             when: MoreThan(new Date('2021-02-12T13:00:00'))
+    //         },{
+    //             description: Like('%meet%')
+    //         }],
+    //         take: 2,
+    //         order: {
+    //             id: 'DESC'
+    //         }
+    //     });
+    // }
+
+    @Get('/test')
+    async test() {
+        return await this.repository.findOne(1, {
+            relations: ['attendees']
         });
     }
 

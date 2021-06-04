@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post } from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpCode, Param, ParseIntPipe, Patch, Post } from "@nestjs/common";
 import { CreateEventDTO } from "./create-event.dto";
 import { UpdateEventDTO } from "./update-event.dto";
 import { Event } from "./event.entity";
@@ -16,10 +16,10 @@ export class EventsController {
         return await this.repository.find();
     }
 
-    // @Get(':id')
-    // async findOne(@Param('id') id) {
-    //     return await this.repository.findOne(id);
-    // }
+    @Get(':id')
+    async findOne(@Param('id', ParseIntPipe) id:number) {
+        return await this.repository.findOne(id);
+    }
 
     @Get('/practice')
     async practice() {

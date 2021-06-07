@@ -1,5 +1,5 @@
 import { Column, Entity, OneToMany, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
-import { Attendee } from "./attendee.entity";
+import { Attendee, AttendeeAnswerEnum } from "./attendee.entity";
 
 @Entity()
 export class Event {
@@ -11,4 +11,8 @@ export class Event {
     @OneToMany(() => Attendee, (attendee) => attendee.event, {
         cascade: true
     }) attendees: Attendee[];
+    attendeeCount? :number;
+    attendeeAccepted?: number;
+    attendeeMaybe?: number;
+    attendeeRejected?: number;
 }

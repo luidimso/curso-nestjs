@@ -1,5 +1,6 @@
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
+import { AuthController } from "./auth.controller";
 import { LocalStrategy } from "./local.strategy";
 import { User } from "./user.entity";
 
@@ -9,6 +10,9 @@ import { User } from "./user.entity";
     ],
     providers: [
         LocalStrategy
+    ],
+    controllers: [
+        AuthController
     ]
 })
 export class AuthModule {}

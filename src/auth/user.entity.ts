@@ -1,4 +1,5 @@
-import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Event } from "src/events/event.entity";
+import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Profile } from "./profile.entity";
 
 @Entity()
@@ -14,4 +15,5 @@ export class User {
     @Column() firstName: string;
     @Column() lastName: string;
     @OneToOne(() => Profile) @JoinColumn() profile: Profile;
+    @OneToMany(() => Event, (event) => event.organizer) organized: Event[];
 }

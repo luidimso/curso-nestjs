@@ -7,6 +7,7 @@ import { DeleteResult, Repository } from "typeorm";
 import { AttendeeAnswerEnum } from "./attendee.entity";
 import { CreateEventDTO } from "./input/create-event.dto";
 import { ListEvents, WhenEventFilter } from "./input/lits.events";
+import { UpdateEventDTO } from "./input/update-event.dto";
 
 @Injectable()
 export class EventsService {
@@ -81,6 +82,14 @@ export class EventsService {
             ...input,
             organizer: user,
             when: new Date(input.when)
+        });
+    }
+
+    public async updateEvent(event:Event, input:UpdateEventDTO): Promise<Event> {
+        return await this.eventsRepository.save({
+            ...event,
+            ...input,
+            when: input.when ? new Date(input.when) : event.when
         });
     }
 }

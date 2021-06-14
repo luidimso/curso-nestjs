@@ -1,10 +1,6 @@
-import { Body, Controller, Delete, Get, HttpCode, Logger, NotFoundException, Param, ParseIntPipe, Patch, Post, Query, UseGuards, UsePipes, ValidationPipe } from "@nestjs/common";
+import { Body, Controller, Delete, ForbiddenException, Get, HttpCode, Logger, NotFoundException, Param, ParseIntPipe, Patch, Post, Query, UseGuards, UsePipes, ValidationPipe } from "@nestjs/common";
 import { CreateEventDTO } from "./input/create-event.dto";
 import { UpdateEventDTO } from "./input/update-event.dto";
-import { Event } from "./event.entity";
-import { Like, MoreThan, Repository } from "typeorm";
-import { InjectRepository } from "@nestjs/typeorm";
-import { Attendee } from "./attendee.entity";
 import { EventsService } from "./events.service";
 import { ListEvents } from "./input/lits.events";
 import { CurrentUser } from "src/auth/current-user.decorator";
@@ -16,8 +12,6 @@ export class EventsController {
     private readonly logger = new Logger(EventsController.name);
 
     constructor(
-        @InjectRepository(Event) private readonly repository: Repository<Event>,
-        @InjectRepository(Attendee) private readonly attendeeRepository: Repository<Attendee>,
         private readonly eventsService: EventsService
     ) {}
 
@@ -62,21 +56,21 @@ export class EventsController {
     //     });
     // }
 
-    @Get('/test')
-    async test() {
-        // return await this.repository.findOne(1, {
-        //     relations: ['attendees']
-        // });
-        const event = await this.repository.findOne(1, {
-            relations: ['attendees']
-        });
-        const attendee = new Attendee();
-        attendee.name = 'Luidi 3';
-        event.attendees = [];
+    // @Get('/test')
+    // async test() {
+    //     // return await this.repository.findOne(1, {
+    //     //     relations: ['attendees']
+    //     // });
+    //     const event = await this.repository.findOne(1, {
+    //         relations: ['attendees']
+    //     });
+    //     const attendee = new Attendee();
+    //     attendee.name = 'Luidi 3';
+    //     event.attendees = [];
 
-        await this.repository.save(event);
-        return event;
-    }
+    //     await this.repository.save(event);
+    //     return event;
+    // }
 
     @Post()
     @UseGuards(AuthGuardJwt)
@@ -85,27 +79,35 @@ export class EventsController {
     }
 
     @Patch(':id')
-    async update(@Param('id') id, @Body() input:UpdateEventDTO) {
-        const event = await this.repository.findOne(id);
+    @UseGuards(AuthGuardJwt)
+    async update(@Param('id') id, @Body() input:UpdateEventDTO, @CurrentUser() user: User) {
+        const event = await this.eventsService.getEvent(id);
 
         if(!event) {
             throw new NotFoundException();
         }
 
-        return await this.repository.save({
-            ...event,
-            ...input,
-            when: input.when ? new Date(input.when) : event.when
-        });
+        if(event.organizerId !== user.id) {
+            throw new ForbiddenException(null, "You are not authorized to change this event");
+        }
+
+        return await this.eventsService.updateEvent(event, input);
     }
 
     @Delete(':id')
     @HttpCode(204)
-    async remove(@Param('id') id) {
-        const result = await this.eventsService.deleteEvent(id);
+    @UseGuards(AuthGuardJwt)
+    async remove(@Param('id') id, @CurrentUser() user: User) {
+        const event = await this.eventsService.getEvent(id);
 
-        if(result?.affected !== 1) {
+        if(!event) {
             throw new NotFoundException();
         }
+
+        if(event.organizerId !== user.id) {
+            throw new ForbiddenException(null, "You are not authorized to remove this event");
+        }
+
+        await this.eventsService.deleteEvent(id);
     }
 }

@@ -13,7 +13,8 @@ export enum AttendeeAnswerEnum {
 export class Attendee {
     @PrimaryGeneratedColumn() @Expose() id: number;
     @ManyToOne(() => Event, (event) => event.attendees, {
-        nullable: true
+        nullable: true,
+        onDelete: 'CASCADE'
     }) @JoinColumn() event:Event;
     @Column() eventId: number;
     @Column('enum', {

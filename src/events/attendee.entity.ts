@@ -12,7 +12,6 @@ export enum AttendeeAnswerEnum {
 @Entity()
 export class Attendee {
     @PrimaryGeneratedColumn() @Expose() id: number;
-    @Column() @Expose() name: string;
     @ManyToOne(() => Event, (event) => event.attendees, {
         nullable: true
     }) @JoinColumn() event:Event;
@@ -21,6 +20,6 @@ export class Attendee {
         enum: AttendeeAnswerEnum,
         default: AttendeeAnswerEnum.Accepted
     }) @Expose() answer?: AttendeeAnswerEnum;
-    @ManyToOne(() => User, (user) => user.attended) user: User;
+    @ManyToOne(() => User, (user) => user.attended) @Expose() user: User;
     @Column() userId: number;
 }

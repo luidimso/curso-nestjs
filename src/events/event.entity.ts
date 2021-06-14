@@ -6,6 +6,13 @@ import { Attendee, AttendeeAnswerEnum } from "./attendee.entity";
 
 @Entity()
 export class Event {
+
+    constructor(
+        partial?: Partial<Event>
+    ) {
+        Object.assign(this, partial);
+    }
+
     @PrimaryGeneratedColumn() @Expose() id: number;
     @Column() @Expose() name: string;
     @Column() @Expose() description: string;

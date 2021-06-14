@@ -35,7 +35,7 @@ export class EventsController {
     @Get(':id')
     @UseInterceptors(ClassSerializerInterceptor)
     async findOne(@Param('id', ParseIntPipe) id:number) {
-        const event = await this.eventsService.getEvent(id);
+        const event = await this.eventsService.getEventWithAttendeeCount(id);
 
         if(!event) {
             throw new NotFoundException();
@@ -87,8 +87,8 @@ export class EventsController {
     @Patch(':id')
     @UseGuards(AuthGuardJwt)
     @UseInterceptors(ClassSerializerInterceptor)
-    async update(@Param('id') id, @Body() input:UpdateEventDTO, @CurrentUser() user: User) {
-        const event = await this.eventsService.getEvent(id);
+    async update(@Param('id', ParseIntPipe) id, @Body() input:UpdateEventDTO, @CurrentUser() user: User) {
+        const event = await this.eventsService.findOne(id);
 
         if(!event) {
             throw new NotFoundException();
@@ -104,8 +104,8 @@ export class EventsController {
     @Delete(':id')
     @HttpCode(204)
     @UseGuards(AuthGuardJwt)
-    async remove(@Param('id') id, @CurrentUser() user: User) {
-        const event = await this.eventsService.getEvent(id);
+    async remove(@Param('id', ParseIntPipe) id, @CurrentUser() user: User) {
+        const event = await this.eventsService.findOne(id);
 
         if(!event) {
             throw new NotFoundException();

@@ -1,6 +1,6 @@
 import { Expose } from "class-transformer";
 import { PaginationResult } from "pagination/paginator";
-import { User } from "src/auth/user.entity";
+import { User } from "./../auth/user.entity";
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
 import { Attendee, AttendeeAnswerEnum } from "./attendee.entity";
 

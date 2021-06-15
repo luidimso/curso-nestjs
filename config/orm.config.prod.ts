@@ -1,7 +1,11 @@
 import { registerAs } from '@nestjs/config';
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
-import { Attendee } from 'src/events/attendee.entity';
-import { Event } from 'src/events/event.entity';
+import { Profile } from './../src/auth/profile.entity';
+import { User } from './../src/auth/user.entity';
+import { Attendee } from './../src/events/attendee.entity';
+import { Event } from './../src/events/event.entity';
+import { Subject } from './../src/school/subject.entity';
+import { Teacher } from './../src/school/teacher.entity';
 
 export default registerAs('orm.config', ():TypeOrmModuleOptions => ({
     type: 'mysql',
